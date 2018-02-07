@@ -52,7 +52,7 @@ public class Parser implements ApplicationRunner {
         boolean containsOption = args.containsOption("startDate");
         logger.info("Contains startDate: " + containsOption);
 
-        readerLogService.readLogFile("access.log");
+        readerLogService.readLogFile("teste.log");
         //mock
         List<AccessLog> logs = new ArrayList<>();
         AccessLog accessLog = new AccessLog();

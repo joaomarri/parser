@@ -17,7 +17,7 @@ public class DataSourceConfig {
         dataSource.setDriverClassName("net.sourceforge.jtds.jdbc.Driver");
         dataSource.setUsername("desenvolvimento");
         dataSource.setPassword("desenvolvimento");
-        dataSource.setUrl("jdbc:jtds:sqlserver://HURIT:1436/DBM");
+        dataSource.setUrl("jdbc:jtds:sqlserver://HURIT:1436/IpirangaWS");
         dataSource.setInitialSize(3);
         dataSource.setMaxActive(10);
         dataSource.setMaxIdle(8);
