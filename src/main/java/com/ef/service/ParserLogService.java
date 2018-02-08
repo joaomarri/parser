@@ -25,8 +25,9 @@ public class ParserLogService {
 
 	@Autowired
 	private WriterLogService writerLogService;
+	 
 	
-	public void readLogFile(String fileName) {
+	public void parseLogFileToDatabase(String fileName) {
 		logger.info("Reading log file {}", fileName);
 		
 		Scanner scanner = null;
@@ -42,7 +43,7 @@ public class ParserLogService {
 				logs.add(log);
 				count++;
 				if (count == 100 || !scanner.hasNext()) {
-					//persist max 100 logs
+					//persist max 100 logs each time
 					writerLogService.persistLogs(logs);
 					count = 0;
 					logs = new ArrayList<>(); 
@@ -76,16 +77,6 @@ public class ParserLogService {
 			log.setStatus(Integer.valueOf(str.nextElement().toString()));
 			log.setUserAgent(str.nextElement().toString());
 		}
-		
-		/*String[] tokens = line.split("|");
-		if (tokens != null) {
-			log = new AccessLog();
-			log.setDate(dateFormat.parse(tokens[0]));
-			log.setIp(tokens[1]);
-			log.setRequest(tokens[2]);
-			log.setStatus(Integer.valueOf(tokens[3]));
-			log.setUserAgent(tokens[4]);
-		}*/
 		
 		return log;
 	}
