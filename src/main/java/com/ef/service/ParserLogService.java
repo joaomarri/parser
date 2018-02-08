@@ -3,7 +3,6 @@ package com.ef.service;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -15,14 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ef.model.AccessLog;
+import com.ef.util.DateUtil;
 
 @Component
 public class ParserLogService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ParserLogService.class);
 	
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-
+	private DateUtil dtUtil = new DateUtil();
+	
 	@Autowired
 	private WriterLogService writerLogService;
 	 
@@ -71,7 +71,7 @@ public class ParserLogService {
 		
 		if (str.hasMoreElements()) {
 			log = new AccessLog();
-			log.setDate(dateFormat.parse(str.nextElement().toString()));
+			log.setDate(dtUtil.toDateLog(str.nextElement().toString()));
 			log.setIp(str.nextElement().toString());
 			log.setRequest(str.nextElement().toString());
 			log.setStatus(Integer.valueOf(str.nextElement().toString()));

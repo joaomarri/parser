@@ -2,6 +2,7 @@ package com.ef;
 
 
 import java.util.Arrays;
+import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +14,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.ef.service.ParserLogService;
+import com.ef.util.DateUtil;
+import com.ef.util.DurationEnum;
 
 @SpringBootApplication
 public class Parser implements ApplicationRunner {
 
 	private static final Logger logger = LoggerFactory.getLogger(Parser.class);
-
+	
+	private DateUtil dtUtil = new DateUtil();
+	
 	@Autowired
 	private ParserLogService parserLogService;	
 	
@@ -55,6 +60,9 @@ public class Parser implements ApplicationRunner {
         }
 
         parserLogService.parseLogFileToDatabase(accesslog);
+        int hours = DurationEnum.getHours(duration);
+        Date startdate = dtUtil.toDate(startDate);
+        Date endDate = dtUtil.addHours(startdate, hours);
 		
 	}
 }
