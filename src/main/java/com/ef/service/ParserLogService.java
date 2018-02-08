@@ -7,20 +7,24 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.ef.model.AccessLog;
 
-@Service
-public class ReaderLogService {
+@Component
+public class ParserLogService {
 
-	private static final Logger logger = LoggerFactory.getLogger(ReaderLogService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ParserLogService.class);
 	
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
+	@Autowired
+	private WriterLogService writerLogService;
 	
 	public void readLogFile(String fileName) {
 		logger.info("Reading log file {}", fileName);
@@ -37,8 +41,9 @@ public class ReaderLogService {
 				AccessLog log = mapToItem(line);
 				logs.add(log);
 				count++;
-				if (count == 100) {
-					//persist na base os 100
+				if (count == 100 || !scanner.hasNext()) {
+					//persist max 100 logs
+					writerLogService.persistLogs(logs);
 					count = 0;
 					logs = new ArrayList<>(); 
 				}
@@ -51,7 +56,7 @@ public class ReaderLogService {
 		} catch (ParseException p) {
 			logger.error("Error when try to parse the file {}", fileName, p);
 		} catch (Exception ex) {
-			logger.error("Error in the process parse {}", fileName, ex);
+			logger.error("Error in the parse process", ex);
 		} finally {
 			if (scanner!=null) {
 				scanner.close();
@@ -61,7 +66,18 @@ public class ReaderLogService {
 	
 	private AccessLog mapToItem(String line) throws ParseException {
 		AccessLog log = null;
-		String[] tokens = line.split("|");
+		StringTokenizer str = new StringTokenizer(line, "|");
+		
+		if (str.hasMoreElements()) {
+			log = new AccessLog();
+			log.setDate(dateFormat.parse(str.nextElement().toString()));
+			log.setIp(str.nextElement().toString());
+			log.setRequest(str.nextElement().toString());
+			log.setStatus(Integer.valueOf(str.nextElement().toString()));
+			log.setUserAgent(str.nextElement().toString());
+		}
+		
+		/*String[] tokens = line.split("|");
 		if (tokens != null) {
 			log = new AccessLog();
 			log.setDate(dateFormat.parse(tokens[0]));
@@ -69,7 +85,7 @@ public class ReaderLogService {
 			log.setRequest(tokens[2]);
 			log.setStatus(Integer.valueOf(tokens[3]));
 			log.setUserAgent(tokens[4]);
-		}
+		}*/
 		
 		return log;
 	}

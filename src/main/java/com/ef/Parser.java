@@ -14,7 +14,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.ef.model.AccessLog;
-import com.ef.service.ReaderLogService;
+import com.ef.service.ParserLogService;
 import com.ef.service.WriterLogService;
 
 @SpringBootApplication
@@ -23,10 +23,8 @@ public class Parser implements ApplicationRunner {
 	private static final Logger logger = LoggerFactory.getLogger(Parser.class);
 
 	@Autowired
-	private ReaderLogService readerLogService;
+	private ParserLogService readerLogService;
 	
-	@Autowired
-	private WriterLogService writerLogService;
 	
 	
 	public static void main(String[] args) {
@@ -54,10 +52,10 @@ public class Parser implements ApplicationRunner {
 
         readerLogService.readLogFile("teste.log");
         //mock
-        List<AccessLog> logs = new ArrayList<>();
-        AccessLog accessLog = new AccessLog();
-        accessLog.setDate(new Date());
-        logs.add(accessLog);
-		writerLogService.persistLogs(logs);
+        //List<AccessLog> logs = new ArrayList<>();
+        //AccessLog accessLog = new AccessLog();
+        //accessLog.setDate(new Date());
+        //logs.add(accessLog);
+		
 	}
 }

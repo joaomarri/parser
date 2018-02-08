@@ -13,40 +13,30 @@ import org.springframework.stereotype.Repository;
 
 import com.ef.model.AccessLog;
 
+/**
+ * 
+ * LogAccess repository
+ *
+ */
+
 @Repository
-public class WriterLogDao {
+public class LogAccessDao {
 
 	@Autowired
 	@Qualifier("sql")
 	private NamedParameterJdbcTemplate jdbcTemplate;
 	
 	
-	public void persistLog(AccessLog log) {
-		StringBuilder sql = new StringBuilder();
-		sql.append(" insert into accessLog (date, ip, request, status, userAgent) ");
-		sql.append(" values ");
-		sql.append(" (:date, :ip, :request, :status, :userAgent) ");
-		
-		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-		namedParameters.addValue("date", log.getDate());
-		namedParameters.addValue("ip", log.getIp());
-		namedParameters.addValue("request", log.getRequest());
-		namedParameters.addValue("status", log.getStatus());
-		namedParameters.addValue("userAgent", log.getUserAgent());
-		
-		jdbcTemplate.update(sql.toString(), namedParameters);
-	}
-	
 	public void persistLogs(List<AccessLog> logs) {
 		StringBuilder sql = new StringBuilder();
-		sql.append(" insert into accessLog (date, ip, request, status, userAgent) ");
+		sql.append(" insert into accessLog (dateLog, ip, request, status, userAgent) ");
 		sql.append(" values ");
-		sql.append(" (:date, :ip, :request, :status, :userAgent) ");
+		sql.append(" (:dateLog, :ip, :request, :status, :userAgent) ");
 		
 		List<Map<String, Object>> batchValues = new ArrayList<>(logs.size());
 		for (AccessLog log : logs) {
 			Map<String, Object> map = new HashMap<>();
-			map.put("date", log.getDate());
+			map.put("dateLog", log.getDate());
 			map.put("ip", log.getIp());
 			map.put("request", log.getRequest());
 			map.put("status", log.getStatus());

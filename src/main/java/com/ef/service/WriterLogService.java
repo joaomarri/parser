@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ef.dao.WriterLogDao;
+import com.ef.dao.LogAccessDao;
 import com.ef.model.AccessLog;
 
 /**
@@ -16,15 +16,11 @@ import com.ef.model.AccessLog;
 public class WriterLogService {
 	
 	@Autowired
-	private WriterLogDao writerLogDao;
+	private LogAccessDao logAccessDao;
 	
-
-	public void persistLog(AccessLog log) {
-		writerLogDao.persistLog(log);
-	}
 	
 	public void persistLogs(List<AccessLog> logs) {
-		writerLogDao.persistLogs(logs);
+		logAccessDao.persistLogs(logs);
 	}
 	
 }
