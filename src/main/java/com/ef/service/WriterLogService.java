@@ -19,8 +19,12 @@ public class WriterLogService {
 	private LogAccessDao logAccessDao;
 	
 	
-	public void persistLogs(List<AccessLog> logs) {
-		logAccessDao.persistLogs(logs);
+	public void persistLogs(List<AccessLog> logs, String fileName) {
+		logAccessDao.persistLogs(logs, fileName);
+	}
+	
+	public void deleteLogsTemp(String fileName) {
+		logAccessDao.deleteLogsTemp(fileName);
 	}
 	
 }

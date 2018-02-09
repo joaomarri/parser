@@ -5,7 +5,8 @@ create table accessLog (
 	ip varchar(20) not null, 
 	request varchar(500) not null, 
 	status int not null, 
-	userAgent varchar(500) not null
+	userAgent varchar(500) not null,
+	filename varchar(400) not null
 );
 
 create table parseResult (

@@ -44,7 +44,7 @@ public class ParserLogService {
 				count++;
 				if (count == 100 || !scanner.hasNext()) {
 					//persist max 100 logs each time
-					writerLogService.persistLogs(logs);
+					writerLogService.persistLogs(logs, fileName);
 					count = 0;
 					logs = new ArrayList<>(); 
 				}

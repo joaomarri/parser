@@ -34,11 +34,11 @@ public class LogAccessDao {
 	private NamedParameterJdbcTemplate jdbcTemplate;
 	
 	
-	public void persistLogs(List<AccessLog> logs) {
+	public void persistLogs(List<AccessLog> logs, String fileName) {
 		StringBuilder sql = new StringBuilder();
-		sql.append(" insert into accessLog (dateLog, ip, request, status, userAgent) ");
+		sql.append(" insert into accessLog (dateLog, ip, request, status, userAgent, fileName) ");
 		sql.append(" values ");
-		sql.append(" (:dateLog, :ip, :request, :status, :userAgent) ");
+		sql.append(" (:dateLog, :ip, :request, :status, :userAgent, :fileName) ");
 		
 		List<Map<String, Object>> batchValues = new ArrayList<>(logs.size());
 		for (AccessLog log : logs) {
@@ -48,6 +48,7 @@ public class LogAccessDao {
 			map.put("request", log.getRequest());
 			map.put("status", log.getStatus());
 			map.put("userAgent", log.getUserAgent());
+			map.put("fileName", fileName);
 			batchValues.add(map);
 		}
 		
@@ -107,4 +108,13 @@ public class LogAccessDao {
 		
 	}
 	
+	public void deleteLogsTemp(String fileName) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(" delete from accessLog where fileName = :fileName ");
+		
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("fileName", fileName);
+		
+		jdbcTemplate.update(sql.toString(), namedParameters);
+	}
 }
