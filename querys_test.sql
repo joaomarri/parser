@@ -7,6 +7,7 @@ and dateLog <= '2017-01-01 14:00:00'
 Group by ip
 Having count(ip) > 2
 
+
 --2)
 select * from accessLog
 where

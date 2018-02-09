@@ -15,6 +15,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.ef.model.AccessLog;
+import com.ef.model.ParseResult;
 import com.ef.service.AccessLogService;
 import com.ef.service.ParserLogService;
 import com.ef.util.DateUtil;
@@ -72,8 +73,10 @@ public class Parser implements ApplicationRunner {
         List<AccessLog> logs = accessLogService.getAcessLogs(startdate, endDate, threshold);
         
         for (AccessLog log : logs) {
-        	logger.info("This IP: {} is blocked!", log.getIp());
-        	// save this ips in database
+        	logger.info("This IP: {} is blocked !!", log.getIp());
+        	ParseResult parseResult = new ParseResult(log.getIp(), "this ip is blocked: made more than "+threshold+" requests starting from "+startdate+" to "+endDate+" ("+hours+" hours)");
+        	// save this ips and comments in database
+        	accessLogService.persistParseResult(parseResult);
 		}
 		
 	}

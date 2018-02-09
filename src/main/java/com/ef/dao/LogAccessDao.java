@@ -18,6 +18,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.ef.model.AccessLog;
+import com.ef.model.ParseResult;
 
 /**
  * 
@@ -87,6 +88,22 @@ public class LogAccessDao {
 		} catch (Exception ex) {
 			throw ex;
 		}
+		
+	}
+	
+	public void persistParseResult(ParseResult parseResult) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(" insert into parseResult (ip, comment, parseDate) ");
+		sql.append(" values ");
+		sql.append(" (:ip, :comment, :parseDate) ");
+		
+		Date parseDate = new Date();
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("ip", parseResult.getIp());
+		namedParameters.addValue("comment", parseResult.getComment());
+		namedParameters.addValue("parseDate", parseDate);
+		
+		jdbcTemplate.update(sql.toString(), namedParameters);
 		
 	}
 	

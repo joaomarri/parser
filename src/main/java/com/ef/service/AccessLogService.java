@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.ef.dao.LogAccessDao;
 import com.ef.model.AccessLog;
+import com.ef.model.ParseResult;
 
 @Service
 public class AccessLogService {
@@ -31,5 +32,9 @@ public class AccessLogService {
 		}
 		
 		return logs;
+	}
+	
+	public void persistParseResult(ParseResult parseResult) {
+		logAccessDao.persistParseResult(parseResult);
 	}
 }
