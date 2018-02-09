@@ -1,12 +1,19 @@
 package com.ef.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -44,6 +51,43 @@ public class LogAccessDao {
 		}
 		
 		jdbcTemplate.batchUpdate(sql.toString(), batchValues.toArray(new Map[logs.size()]));
+	}
+	
+	public List<AccessLog> getAcessLogs(Date startDate, Date endDate, Integer threshold) throws Exception {
+		List<AccessLog> logs = new ArrayList<>();
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append(" select ip from accessLog ");
+		sql.append(" where ");
+		sql.append(" dateLog >= :startDate ");
+		sql.append(" and dateLog <= :endDate ");
+		sql.append(" Group by ip ");
+		sql.append(" Having count(ip) > :threshold "); 
+		
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("startDate", startDate);
+		namedParameters.addValue("endDate", endDate);
+		namedParameters.addValue("threshold", threshold);
+		
+		try {
+			return jdbcTemplate.query(sql.toString(), namedParameters, new ResultSetExtractor<List<AccessLog>>() {
+				@Override
+				public List<AccessLog> extractData(ResultSet rs) throws SQLException, DataAccessException {
+					while (rs.next()) {
+						AccessLog log = new AccessLog();
+						log.setIp(rs.getString("ip"));
+						
+						logs.add(log);
+					}
+					return logs;
+				}
+			});
+		} catch (EmptyResultDataAccessException e) {
+			return logs;
+		} catch (Exception ex) {
+			throw ex;
+		}
+		
 	}
 	
 }

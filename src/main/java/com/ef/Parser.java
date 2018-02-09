@@ -3,6 +3,7 @@ package com.ef;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,8 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.ef.model.AccessLog;
+import com.ef.service.AccessLogService;
 import com.ef.service.ParserLogService;
 import com.ef.util.DateUtil;
 import com.ef.util.DurationEnum;
@@ -26,6 +29,9 @@ public class Parser implements ApplicationRunner {
 	
 	@Autowired
 	private ParserLogService parserLogService;	
+	
+	@Autowired
+	private AccessLogService accessLogService;
 	
 	@Value("${accesslog}")
 	private String accesslog;
@@ -63,6 +69,12 @@ public class Parser implements ApplicationRunner {
         int hours = DurationEnum.getHours(duration);
         Date startdate = dtUtil.toDate(startDate);
         Date endDate = dtUtil.addHours(startdate, hours);
+        List<AccessLog> logs = accessLogService.getAcessLogs(startdate, endDate, threshold);
+        
+        for (AccessLog log : logs) {
+        	logger.info("This IP: {} is blocked!", log.getIp());
+        	// save this ips in database
+		}
 		
 	}
 }

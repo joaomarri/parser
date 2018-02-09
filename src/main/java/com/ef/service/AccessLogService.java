@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,18 +15,20 @@ import com.ef.model.AccessLog;
 @Service
 public class AccessLogService {
 
+	private static final Logger logger = LoggerFactory.getLogger(AccessLogService.class);
+	
 	@Autowired
 	private LogAccessDao logAccessDao;
 	
-	public List<AccessLog> getAcessLogs(Date startDate, Date endDate, Integer threshold) {
+	public List<AccessLog> getAcessLogs(Date startDate, Date endDate, Integer threshold) throws Exception {
 		List<AccessLog> logs = new ArrayList<>();
 		
-		//select ip from accessLog
-		//where
-		//dateLog >= '2017-01-01 13:00:00'
-		//and dateLog <= '2017-01-01 14:00:00'
-		//Group by ip
-		//Having count(ip) >2
+		try {
+			logs = logAccessDao.getAcessLogs(startDate, endDate, threshold);
+		} catch (Exception e) {
+			logger.error("Error when try to get logs in database", e);
+			throw e;
+		}
 		
 		return logs;
 	}
