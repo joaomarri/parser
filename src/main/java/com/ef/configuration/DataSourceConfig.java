@@ -13,12 +13,12 @@ public class DataSourceConfig {
 
     @Bean(name="dataSource")
     public DataSource dataSource() {
-    	BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName("net.sourceforge.jtds.jdbc.Driver");
-        dataSource.setUsername("desenvolvimento");
-        dataSource.setPassword("desenvolvimento");
-        dataSource.setUrl("jdbc:jtds:sqlserver://HURIT:1436/IpirangaWS");
-        dataSource.setInitialSize(5);
+    		BasicDataSource dataSource = new BasicDataSource(); 
+        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource.setUsername("parseruser");
+        dataSource.setPassword("parseruser");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/parserdb?profileSQL=false");
+        dataSource.setInitialSize(3);
         dataSource.setMaxActive(10);
         dataSource.setMaxIdle(8);
         return dataSource;

@@ -73,10 +73,10 @@ public class Parser implements ApplicationRunner {
         List<AccessLog> logs = accessLogService.getAcessLogs(startdate, endDate, threshold);
         
         for (AccessLog log : logs) {
-        	logger.info("This IP: {} is blocked !!", log.getIp());
-        	ParseResult parseResult = new ParseResult(log.getIp(), "this ip is blocked: made more than "+threshold+" requests starting from "+startdate+" to "+endDate+" ("+hours+" hours)");
-        	// save this ips and comments in database
-        	accessLogService.persistParseResult(parseResult);
+        		logger.info("This IP: {} is blocked !!", log.getIp());
+        		ParseResult parseResult = new ParseResult(log.getIp(), "this ip is blocked: made more than "+threshold+" requests starting from "+startdate+" to "+endDate+" ("+hours+" hours)");
+        		// save this ips and comments in database
+        		accessLogService.persistParseResult(parseResult, accesslog);
 		}
 		
 	}

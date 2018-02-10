@@ -34,7 +34,7 @@ public class AccessLogService {
 		return logs;
 	}
 	
-	public void persistParseResult(ParseResult parseResult) {
-		logAccessDao.persistParseResult(parseResult);
+	public void persistParseResult(ParseResult parseResult, String filename) {
+		logAccessDao.persistParseResult(parseResult, filename);
 	}
 }

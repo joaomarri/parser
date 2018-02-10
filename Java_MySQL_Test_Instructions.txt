@@ -66,5 +66,24 @@ Deliverables
 
 (4) SQL queries for SQL test
 
+----------------------
+tests:
+mysql server:
+sudo launchctl load -F /Library/LaunchDaemons/com.oracle.oss.mysql.mysqld.plist
+
+
+Mysql commnad:
+/usr/local/mysql/bin/mysql -u root
+exit
+
+/usr/local/mysql/bin/mysql -u parseruser -p
+
+
+--accesslog=/Documents/workspace-sts/parser/access.log
+--startDate=2017-01-01.13:00:00
+--duration=hourly
+--threshold=100
+
+
 
 

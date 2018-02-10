@@ -92,17 +92,19 @@ public class LogAccessDao {
 		
 	}
 	
-	public void persistParseResult(ParseResult parseResult) {
+	public void persistParseResult(ParseResult parseResult, String fileName) {
 		StringBuilder sql = new StringBuilder();
-		sql.append(" insert into parseResult (ip, comment, parseDate) ");
+		sql.append(" insert into parseResult (ip, comment, parseDate, filename) ");
 		sql.append(" values ");
-		sql.append(" (:ip, :comment, :parseDate) ");
+		sql.append(" (:ip, :comment, :parseDate, :filename) ");
 		
 		Date parseDate = new Date();
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 		namedParameters.addValue("ip", parseResult.getIp());
 		namedParameters.addValue("comment", parseResult.getComment());
 		namedParameters.addValue("parseDate", parseDate);
+		namedParameters.addValue("filename", fileName);
+		
 		
 		jdbcTemplate.update(sql.toString(), namedParameters);
 		
@@ -110,10 +112,10 @@ public class LogAccessDao {
 	
 	public void deleteLogsTemp(String fileName) {
 		StringBuilder sql = new StringBuilder();
-		sql.append(" delete from accessLog where fileName = :fileName ");
+		sql.append(" delete from accessLog where filename = :filename ");
 		
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-		namedParameters.addValue("fileName", fileName);
+		namedParameters.addValue("filename", fileName);
 		
 		jdbcTemplate.update(sql.toString(), namedParameters);
 	}
