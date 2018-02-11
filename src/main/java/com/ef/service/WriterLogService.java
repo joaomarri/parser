@@ -27,4 +27,8 @@ public class WriterLogService {
 		logAccessDao.deleteLogsTemp(fileName);
 	}
 	
+	public void deleteParseResults(String fileName) {
+		logAccessDao.deleteParseResults(fileName);
+	}
+	
 }

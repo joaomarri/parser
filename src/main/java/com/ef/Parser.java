@@ -49,10 +49,10 @@ public class Parser implements ApplicationRunner {
 	
 	public static void main(String[] args) {
 		
-		//if (args.length != 4) {
-		//	logger.info("Invalid options to run parser !!");
-		//	System.exit(-1);
-		//}
+		if (args.length != 4) {
+			logger.info("Invalid options to run parser !!");
+			System.exit(-1);
+		}
 		
 		SpringApplication.run(Parser.class, args);
 	}
@@ -73,7 +73,7 @@ public class Parser implements ApplicationRunner {
         List<AccessLog> logs = accessLogService.getAcessLogs(startdate, endDate, threshold);
         
         for (AccessLog log : logs) {
-        		logger.info("This IP: {} is blocked !!", log.getIp());
+        		logger.info("This IP: {} is blocked, more than {} requests in {} hours", log.getIp(), threshold, hours);
         		ParseResult parseResult = new ParseResult(log.getIp(), "this ip is blocked: made more than "+threshold+" requests starting from "+startdate+" to "+endDate+" ("+hours+" hours)");
         		// save this ips and comments in database
         		accessLogService.persistParseResult(parseResult, accesslog);

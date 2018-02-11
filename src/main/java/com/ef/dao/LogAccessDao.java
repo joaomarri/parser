@@ -119,4 +119,14 @@ public class LogAccessDao {
 		
 		jdbcTemplate.update(sql.toString(), namedParameters);
 	}
+	
+	public void deleteParseResults(String fileName) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(" delete from parseResult where filename = :filename ");
+		
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("filename", fileName);
+		
+		jdbcTemplate.update(sql.toString(), namedParameters);
+	}
 }

@@ -37,6 +37,10 @@ public class ParserLogService {
 			scanner = new Scanner(new File(fileName));
 			int count = 0;
 			
+			// clean tables of log temporary and results to not repeat inserted logs
+			writerLogService.deleteParseResults(fileName);
+			writerLogService.deleteLogsTemp(fileName);
+			
 			while (scanner.hasNext()) {
 				String line = scanner.nextLine();
 				AccessLog log = mapToItem(line);
