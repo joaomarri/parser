@@ -12,14 +12,35 @@ import org.springframework.stereotype.Service;
 import com.ef.dao.LogAccessDao;
 import com.ef.model.AccessLog;
 import com.ef.model.ParseResult;
+import com.ef.util.DateUtil;
+import com.ef.util.DurationEnum;
 
 @Service
 public class AccessLogService {
 
 	private static final Logger logger = LoggerFactory.getLogger(AccessLogService.class);
 	
+	private DateUtil dtUtil = new DateUtil();
+	
 	@Autowired
 	private LogAccessDao logAccessDao;
+	
+	
+	public void buildParseResult(String accesslog, String duration, String startDate, Integer threshold) throws Exception {
+        
+		int hours = DurationEnum.getHours(duration);
+		Date startdate = dtUtil.toDate(startDate);
+        Date endDate = dtUtil.addHours(startdate, hours);
+		List<AccessLog> logs = getAcessLogs(startdate, endDate, threshold);
+		
+        for (AccessLog log : logs) {
+        		logger.info("This IP: {} is blocked, more than {} requests in {} hours", log.getIp(), threshold, hours);
+        		ParseResult parseResult = new ParseResult(log.getIp(), "this ip is blocked: made more than "+threshold+" requests starting from "+startdate+" to "+endDate+" ("+hours+" hours)");
+        		// save this ips and comments in database
+        		persistParseResult(parseResult, accesslog);
+		}
+	}
+	
 	
 	public List<AccessLog> getAcessLogs(Date startDate, Date endDate, Integer threshold) throws Exception {
 		List<AccessLog> logs = new ArrayList<>();
@@ -37,4 +58,5 @@ public class AccessLogService {
 	public void persistParseResult(ParseResult parseResult, String filename) {
 		logAccessDao.persistParseResult(parseResult, filename);
 	}
+	
 }

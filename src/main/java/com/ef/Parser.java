@@ -2,8 +2,6 @@ package com.ef;
 
 
 import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,19 +12,13 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.ef.model.AccessLog;
-import com.ef.model.ParseResult;
 import com.ef.service.AccessLogService;
 import com.ef.service.ParserLogService;
-import com.ef.util.DateUtil;
-import com.ef.util.DurationEnum;
 
 @SpringBootApplication
 public class Parser implements ApplicationRunner {
 
 	private static final Logger logger = LoggerFactory.getLogger(Parser.class);
-	
-	private DateUtil dtUtil = new DateUtil();
 	
 	@Autowired
 	private ParserLogService parserLogService;	
@@ -67,17 +59,7 @@ public class Parser implements ApplicationRunner {
         }
 
         parserLogService.parseLogFileToDatabase(accesslog);
-        int hours = DurationEnum.getHours(duration);
-        Date startdate = dtUtil.toDate(startDate);
-        Date endDate = dtUtil.addHours(startdate, hours);
-        List<AccessLog> logs = accessLogService.getAcessLogs(startdate, endDate, threshold);
-        
-        for (AccessLog log : logs) {
-        		logger.info("This IP: {} is blocked, more than {} requests in {} hours", log.getIp(), threshold, hours);
-        		ParseResult parseResult = new ParseResult(log.getIp(), "this ip is blocked: made more than "+threshold+" requests starting from "+startdate+" to "+endDate+" ("+hours+" hours)");
-        		// save this ips and comments in database
-        		accessLogService.persistParseResult(parseResult, accesslog);
-		}
+        accessLogService.buildParseResult(accesslog, duration, startDate, threshold);
 		
 	}
 }
